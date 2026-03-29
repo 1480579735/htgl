@@ -1,0 +1,89 @@
+.contract-list {
+  padding: 0;
+}
+
+.contract-list .list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.contract-list .filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.contract-list .filters input,
+.contract-list .filters select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.contract-list .filters input {
+  width: 250px;
+}
+
+.contract-list .table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+}
+
+.contract-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contract-list th,
+.contract-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.contract-list th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.contract-list tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.contract-list .empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.contract-list .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.contract-list .pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.contract-list .pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.contract-list .pagination button:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}

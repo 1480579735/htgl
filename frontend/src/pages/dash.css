@@ -1,0 +1,211 @@
+.dashboard {
+  padding: 0;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #1e293b;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.update-time {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* 统计卡片网格 - 调整大小 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: white;
+  padding: 16px 12px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 信息区块 */
+.info-section {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-section h3 {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* 简单表格 */
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.simple-table th,
+.simple-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 13px;
+}
+
+.simple-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+}
+
+.simple-table tr:hover {
+  background: #f8fafc;
+}
+
+.urgent {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.error-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 16px;
+}
+
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #3498db;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-sm:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+.btn-sm.btn-success {
+  background: #27ae60;
+}
+
+.btn-sm.btn-success:hover {
+  background: #229954;
+}
+
+.btn-sm.btn-secondary {
+  background: #95a5a6;
+}
+
+.btn-sm.btn-secondary:hover {
+  background: #7f8c8d;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  color: #64748b;
+}
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

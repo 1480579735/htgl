@@ -1,0 +1,56 @@
+export function checkName(name) {
+  if (!name || name.trim() === '') {
+    return '名称不能为空';
+  }
+  if (name.length > 100) {
+    return '名称过长';
+  }
+  return null;
+}
+
+export function checkCode(code) {
+  if (!code || code.trim() === '') {
+    return '编码不能为空';
+  }
+  if (code.length > 50) {
+    return '编码过长';
+  }
+  return null;
+}
+
+export function checkPhone(phone) {
+  if (!phone) return null;
+  if (!/^1[3-9]\d{9}$/.test(phone)) {
+    return '手机号格式错误';
+  }
+  return null;
+}
+
+export function checkEmail(email) {
+  if (!email) return null;
+  if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    return '邮箱格式错误';
+  }
+  return null;
+}
+
+export function checkCustomer(data) {
+  const errors = [];
+  
+  const nameErr = checkName(data.name);
+  if (nameErr) errors.push(nameErr);
+  
+  const codeErr = checkCode(data.code);
+  if (codeErr) errors.push(codeErr);
+  
+  const phoneErr = checkPhone(data.phone);
+  if (phoneErr) errors.push(phoneErr);
+  
+  const emailErr = checkEmail(data.email);
+  if (emailErr) errors.push(emailErr);
+  
+  return {
+    ok: errors.length === 0,
+    errors
+  };
+}

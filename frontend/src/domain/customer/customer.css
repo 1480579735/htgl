@@ -1,0 +1,89 @@
+.customer-list {
+  padding: 0;
+}
+
+.customer-list .list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.customer-list .filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.customer-list .filters input,
+.customer-list .filters select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.customer-list .filters input {
+  width: 250px;
+}
+
+.customer-list .table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+}
+
+.customer-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-list th,
+.customer-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.customer-list th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.customer-list tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.customer-list .empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.customer-list .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.customer-list .pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.customer-list .pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.customer-list .pagination button:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}

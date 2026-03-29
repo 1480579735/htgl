@@ -1,0 +1,200 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* 侧边栏固定位置 */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 64px;
+  bottom: 0;
+  width: 260px;
+  z-index: 99;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* 主内容容器 - 需要为侧边栏留出空间 */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-container.sidebar-collapsed {
+  margin-left: 70px;
+}
+
+/* 通栏头部 - 固定在最顶部，覆盖整个宽度 */
+.app-header {
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2632 100%);
+  color: white;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 20px;
+}
+
+.collapse-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.system-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #fff 0%, #b0c4de 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 24px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  transition: all 0.2s;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-icon {
+  font-size: 18px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.user-role {
+  font-size: 12px;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  margin-left: 4px;
+}
+
+/* 退出按钮 - 使用灰色，不用红色 */
+.logout-btn {
+  background: rgba(100, 116, 139, 0.9);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: #64748b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4);
+}
+
+/* 内容区域 - 需要为固定头部和侧边栏留出空间 */
+.app-content {
+  flex: 1;
+  padding: 88px 24px 24px 24px;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .main-container {
+    margin-left: 0;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar:not(.collapsed) {
+    transform: translateX(0);
+  }
+  
+  .app-header {
+    padding: 0 16px;
+  }
+  
+  .system-title {
+    font-size: 16px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .user-role {
+    display: none;
+  }
+  
+  .logout-btn span:last-child {
+    display: none;
+  }
+  
+  .logout-btn {
+    padding: 8px 12px;
+  }
+  
+  .app-content {
+    padding: 80px 16px 16px 16px;
+  }
+}

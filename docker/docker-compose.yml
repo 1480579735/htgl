@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: contract-sqlserver
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong!Passw0rd
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - contract-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: contract-backend
+    environment:
+      DB_HOST: sqlserver
+      DB_USER: sa
+      DB_PASSWORD: YourStrong!Passw0rd
+      DB_NAME: ContractDB
+      JWT_SECRET: your-secret-key-change-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - contract-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: contract-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - contract-network
+
+networks:
+  contract-network:
+    driver: bridge
+
+volumes:
+  sqlserver-data:
