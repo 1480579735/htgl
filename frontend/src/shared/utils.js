@@ -1,18 +1,20 @@
 export function formatDate(date) {
   if (!date) return '';
   const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 export function formatMoney(amount) {
   if (amount === undefined || amount === null) return '0.00';
-  return amount.toLocaleString('zh-CN', { 
-    minimumFractionDigits: 2, 
-    maximumFractionDigits: 2 
-  });
+  return amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+export function debounce(fn, delay = 300) {
+  let timer = null;
+  return function(...args) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
 }
 
 export function formatDateTime(date) {
@@ -27,15 +29,6 @@ export function formatDateTime(date) {
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-export function debounce(fn, delay = 300) {
-  let timer = null;
-  return function(...args) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn.apply(this, args);
-    }, delay);
-  };
-}
 
 export function throttle(fn, delay = 300) {
   let last = 0;

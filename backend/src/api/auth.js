@@ -2,69 +2,65 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
-const Database = require('../core/db');
+const db = require('../core/db');
 
-// 创建数据库实例
-const db = new Database();
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     
-    console.log('========== 登录请求 ==========');
-    console.log('用户名:', username);
+    console.log('登录请求:', { username, password });
     
     if (!username || !password) {
-      return res.status(400).json({ code: -1, msg: '用户名和密码不能为空' });
+      return res.status(400).json({ code: -1, message: '用户名和密码不能为空' });
     }
     
-    // 确保数据库连接
-    await db.connect();
+    // 先查询表结构，打印列名用于调试
+    const columns = await db.query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users'");
+    console.log('users表列名:', columns);
     
-    // 查询用户
-    const users = await db.query(
-      "SELECT * FROM users WHERE name = @username AND del = 0",
-      { username }
-    );
+    // 尝试多种可能的列名
+    let users;
+    try {
+      users = await db.query(
+        "SELECT id, username, password_hash, real_name, role FROM users WHERE username = @username AND is_deleted = 0",
+        { username }
+      );
+    } catch (err) {
+      // 如果 username 列不存在，尝试 name 列
+      users = await db.query(
+        "SELECT id, name as username, password, real_name, role FROM users WHERE name = @username AND is_deleted = 0",
+        { username }
+      );
+    }
     
-    console.log('查询到用户数:', users.length);
+    console.log('查询结果:', users);
     
-    if (!users || users.length === 0) {
-      console.log('用户不存在');
-      return res.status(401).json({ code: -1, msg: '用户名或密码错误' });
+    if (users.length === 0) {
+      return res.status(401).json({ code: -1, message: '用户名或密码错误' });
     }
     
     const user = users[0];
-    console.log('用户信息:', {
-      id: user.id,
-      name: user.name,
-      role: user.role,
-      status: user.status,
-      pwdLength: user.pwd ? user.pwd.length : 0
-    });
     
-    if (user.status !== 1) {
-      console.log('账号已禁用');
-      return res.status(401).json({ code: -1, msg: '账号已被禁用' });
+    // 检查密码字段名
+    let passwordHash = user.password_hash || user.password;
+    if (!passwordHash) {
+      return res.status(401).json({ code: -1, message: '用户数据异常' });
     }
     
-    const isValid = await bcrypt.compare(password, user.pwd);
-    console.log('密码验证结果:', isValid);
+    const isValid = await bcrypt.compare(password, passwordHash);
+    console.log('密码验证:', isValid);
     
     if (!isValid) {
-      console.log('密码错误');
-      return res.status(401).json({ code: -1, msg: '用户名或密码错误' });
+      return res.status(401).json({ code: -1, message: '用户名或密码错误' });
     }
     
     const token = jwt.sign(
-      { id: user.id, name: user.name, role: user.role },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      { id: user.id, username: user.username, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '24h' }
     );
-    
-    console.log('登录成功');
-    console.log('============================');
     
     res.json({
       code: 0,
@@ -72,16 +68,15 @@ router.post('/login', async (req, res) => {
         token,
         user: {
           id: user.id,
-          name: user.name,
-          realName: user.real_name || user.realName,
+          username: user.username,
+          realName: user.real_name,
           role: user.role
         }
       }
     });
   } catch (err) {
     console.error('登录错误:', err);
-    console.error('错误堆栈:', err.stack);
-    res.status(500).json({ code: -1, msg: '服务器错误', error: err.message });
+    res.status(500).json({ code: -1, message: err.message });
   }
 });
 

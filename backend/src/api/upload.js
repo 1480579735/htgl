@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { auth } = require('../middleware/auth');
+const { authenticate } = require('../middleware/auth');
 
 // 确保上传目录存在
 const uploadDir = path.join(__dirname, '../../uploads/contracts');
@@ -17,14 +17,20 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // 使用时间戳+随机数作为文件名，避免中文乱码
     const timestamp = Date.now();
-    const random = Math.round(Math.random() * 1E9);
+    const random = Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    // 保存原始文件名（使用 Buffer 处理中文）
+    // 处理中文文件名
     const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
     req.fileOriginalName = originalName;
-    cb(null, `${timestamp}-${random}${ext}`);
+    
+    // 如果有合同编号，添加到文件名中
+    const contractCode = req.body.contractCode;
+    if (contractCode) {
+      cb(null, `${contractCode}_${timestamp}_${random}${ext}`);
+    } else {
+      cb(null, `${timestamp}_${random}${ext}`);
+    }
   }
 });
 
@@ -40,19 +46,16 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB
-  }
+  limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// 上传文件
-router.post('/', auth, upload.single('file'), async (req, res) => {
+// 上传合同附件
+router.post('/contract', authenticate, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ code: -1, msg: '请选择文件' });
+      return res.status(400).json({ code: -1, message: '请选择文件' });
     }
     
-    // 获取原始文件名
     const originalName = req.fileOriginalName || req.file.originalname;
     
     const fileInfo = {
@@ -65,13 +68,28 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
       uploadTime: new Date().toISOString()
     };
     
-    console.log('文件上传成功:', fileInfo.originalName);
+    console.log(`文件上传成功: ${originalName} -> ${req.file.filename}`);
     
-    res.json({ code: 0, data: fileInfo, msg: '上传成功' });
+    res.json({
+      code: 0,
+      data: fileInfo,
+      message: '上传成功'
+    });
   } catch (err) {
-    console.error('上传失败:', err);
-    res.status(500).json({ code: -1, msg: err.message });
+    console.error('上传错误:', err);
+    res.status(500).json({ code: -1, message: err.message });
   }
+});
+
+// 上传错误处理
+router.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ code: -1, message: '文件大小不能超过10MB' });
+    }
+    return res.status(400).json({ code: -1, message: err.message });
+  }
+  next(err);
 });
 
 module.exports = router;
